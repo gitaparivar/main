@@ -222,10 +222,10 @@
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Doc Creation with specific Shloka</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Export Shlokas in doc</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -236,17 +236,26 @@
             <label for="shlokaList" class="col-form-label">Shloka List:</label>
             <textarea class="form-control" id="shlokaList" placeholder="Example 1.10-15,2.5,3.19-21"></textarea>
 			
-			<label for="shlokaListHelp" class="col-form-label">Help</label>
-            <p class="form-control" id="shlokaListHelp" >
-			How to specify shloka List 
-			Use * to export all chapters and all shlokas
-			Use Command seprated list for specific shlokas from chapter 
-			E.g.
-			1.10-15,2.5,7.12-15 
-			This list is to export Ch 1 Sh 10 to 15, Ch 2 Sh 5 and Ch 7 Sh 12 to 15 
-			
-			1.*,2.10-20 
-			This list is to export all shloka of Ch 1, Ch 2 Sh 10 to 20
+			<!-- <label for="shlokaListHelp" class="col-form-label">Help</label> -->
+            <p class="" id="shlokaListHelp" >
+			<b>How to specify shloka List</b> <br>
+			<ol>
+			<li>
+			<b>* </b> <br>
+			Use * to export all chapters and all shlokas </li>
+			<li>
+			Use Command seprated list for specific shlokas from chapter <br>
+			<ul>
+			<li>
+			<b>1.10-15,2.5,7.12-15</b> <br>
+			This list is to export Ch 1 Sh 10 to 15, Ch 2 Sh 5 and Ch 7 Sh 12 to 15 <br>
+			</li>
+			<li>
+			<b>1.*,2.10-20 </b><br>
+			This list is to export all shloka of Ch 1, Ch 2 Sh 10 to 20 <br>
+			</li>
+			</ul>
+			</ol>
 			</p>
           </div>
         </form>
