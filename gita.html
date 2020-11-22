@@ -409,7 +409,7 @@
 	
 	*/
 
-		var shCount = [0,47,72,43,42,29,47,30,28,34,42,44,20,34,27,20,24,28,78]
+		var shCount = [0,47,72,43,42,29,47,30,28,34,42,55,20,34,27,20,24,28,78]
 		
 		function checkShlokaRange(ch,sh) {
 			var maxSh = shCount[ch]
@@ -480,21 +480,27 @@
 				var i;
 				if ((shList.length == 1) && (shList[0] == "*")) {
 					log.debug("Handling *");
-					var ch,sh,k;
-					for(i=1;i<=shCount.length  ;i++) {
-						ch = i;
+					var k;
+					for(i=1;i < shCount.length  ;i++) {
+						//ch = i;
 						log.debug("Chapter number :" + i);
-						for(k=1;k<= shCount[i];k++) {
+						var chStart = "#chapter_title_" + i ;
+						finalList.push(chStart)
+						for(k=1;k <= shCount[i];k++) {
 							var chSh = "#shloka_" + i + "_"  + k;
 							finalList.push(chSh)
 						}
-						log.debug("Last Shloka number :" + k);
+						var chStart = "#chapter_end_" + i ;
+						finalList.push(chStart)
+						log.debug("Last Shloka number :" + (k-1));
 					
 					}
 				}else {
 					for(i=0;i<shList.length;i++) {
 						var entry = shList[i];
 						var chNum = entry.split('.');
+						var chStart = "#chapter_title_" + chNum[0] ;
+						finalList.push(chStart)
 						if(chNum[1].search('-') != -1) {
 							var shNum = chNum[1].split('-');
 							var j =0;
@@ -506,6 +512,8 @@
 							var chSh = "#shloka_" + chNum[0] + "_"  + chNum[1];
 							finalList.push(chSh)
 						}
+						var chStart = "#chapter_end_" + chNum[0] ;
+						finalList.push(chStart)
 						
 					}
 				}
@@ -537,46 +545,80 @@
 					var shSplitArr = new Array()
 
 					for (i=0;i<shList.length;i++) {
-						var meaningNum = shList[i].replace(/shloka/,"meaning");
-						log.debug("meaningNum :" + meaningNum);
-						var shTxt = $(shList[i]).text().trim()
-						var meaningTxt = $(meaningNum).text().trim()
-						var shSplit = shTxt.split("\n");
-						log.debug(shTxt);
-						log.debug("shSplit len:" + shSplit.length);
-						var j =0;
-						for (j = 0 ; j < shSplit.length;j++) {
-							var txt = new docx.Paragraph({
-									alignment: docx.AlignmentType.CENTER,					
-									children: [
-									new docx.TextRun({
-										text: shSplit[j],
-										bold: true,
-										break:true,
-										size: 36, //Size is in halfPts so if size 18 is required here 36 needs to be specified
-										font: "Calibri",
-										})
+						if(shList[i].search("chapter") != -1) {    //Check if the entry is for chapter name or chapter end 
+							log.debug("Chapter title or end found for creating paragraph:" + shList[i]);
+							var chTxt = $(shList[i]).text().trim()
+							var chTxtSplit = chTxt.split("\n");
+							var j,spaceBefore=100;
+							for (j = 0 ; j < chTxtSplit.length;j++) {
+								if(j == 0) {
+									spaceBefore = 200;
+								}else {
+									spaceBefore = 10;
+								}
+								var txt = new docx.Paragraph({
+											alignment: docx.AlignmentType.CENTER,					
+											children: [
+											new docx.TextRun({
+												text: chTxtSplit[j].trim(),
+												bold: true,
+												thematicBreak:true,
+												size: 36, //Size is in halfPts so if size 18 is required here 36 needs to be specified
+												font: "Calibri",
+												color: "000099",
+												})
+												],
+												spacing: {
+											
+													before: spaceBefore,
+												},
+												});
+								shSplitArr.push(txt);
+							}
+						}else {
+							log.debug("Shloka found for creating paragraph:"  + shList[i]);
+							var meaningNum = shList[i].replace(/shloka/,"meaning");
+							log.debug("meaningNum :" + meaningNum);
+							var shTxt = $(shList[i]).text().trim()
+							var meaningTxt = $(meaningNum).text().trim()
+							var shSplit = shTxt.split("\n");
+							log.debug(shTxt);
+							log.debug("shSplit len:" + shSplit.length);
+							var j =0;
+							for (j = 0 ; j < shSplit.length;j++) {
+								var txt = new docx.Paragraph({
+										alignment: docx.AlignmentType.CENTER,					
+										children: [
+										new docx.TextRun({
+											text: shSplit[j],
+											bold: true,
+											break:true,
+											size: 36, //Size is in halfPts so if size 18 is required here 36 needs to be specified
+											font: "Calibri",
+											})
+											],
+											});
+								shSplitArr.push(txt);
+							
+							}
+							log.debug("Inserting meaning by creating paragraph:"  + shList[i]);					
+							var meaningPara = new docx.Paragraph({
+										alignment: docx.AlignmentType.LEFT,
+										children: [
+											new docx.TextRun({
+											text: meaningTxt,
+											break: true,
+											size: 32,
+											}),		
 										],
-										});
-							shSplitArr.push(txt);
+										spacing: {
+											
+											after: 200,
+										},
+									});
+							shSplitArr.push(meaningPara)
 						
 						}
-											
-						var meaningPara = new docx.Paragraph({
-									alignment: docx.AlignmentType.LEFT,
-									children: [
-										new docx.TextRun({
-										text: meaningTxt,
-										break: true,
-										size: 32,
-										}),		
-									],
-									spacing: {
-										
-										after: 200,
-									},
-								});
-						shSplitArr.push(meaningPara)
 					}
 					doc.addSection({
 							properties: {},
