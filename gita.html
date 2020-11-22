@@ -37,7 +37,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
 
 	<link href="/assets/fontawesome-5.15.1/css/all.css" rel="stylesheet"> <!--load all styles -->
-	<script src="https://unpkg.com/loglevel/dist/loglevel.min.js"></script>
+	<script src="assets/js/loglevel.min.js"></script>
 
 	<!-- =======================================================
   * Template Name: Arsha - v2.2.1
@@ -251,10 +251,10 @@
 			<b>1.10-15,2.5,7.12-15</b> <br>
 			This list is to export Ch 1 Sh 10 to 15, Ch 2 Sh 5 and Ch 7 Sh 12 to 15 <br>
 			</li>
-			<li>
+			<!-- <li>
 			<b>1.*,2.10-20 </b><br>
 			This list is to export all shloka of Ch 1, Ch 2 Sh 10 to 20 <br>
-			</li>
+			</li> -->
 			</ul>
 			</ol>
 			</p>
@@ -477,23 +477,37 @@
 			log.debug("Validation result:" + result);
 			if (result == true) {
 				var shList = txt.split(",");
-				var i=0;
-				
-				for(i=0;i<shList.length;i++) {
-					var entry = shList[i];
-					var chNum = entry.split('.');
-					if(chNum[1].search('-') != -1) {
-						var shNum = chNum[1].split('-');
-						var j =0;
-						for(j=shNum[0];j<=shNum[1];j++) {
-							var chSh = "#shloka_" + chNum[0] + "_"  + j;
+				var i;
+				if ((shList.length == 1) && (shList[0] == "*")) {
+					log.debug("Handling *");
+					var ch,sh,k;
+					for(i=1;i<=shCount.length  ;i++) {
+						ch = i;
+						log.debug("Chapter number :" + i);
+						for(k=1;k<= shCount[i];k++) {
+							var chSh = "#shloka_" + i + "_"  + k;
 							finalList.push(chSh)
 						}
-					}else {
-						var chSh = "#shloka_" + chNum[0] + "_"  + chNum[1];
-						finalList.push(chSh)
-					}
+						log.debug("Last Shloka number :" + k);
 					
+					}
+				}else {
+					for(i=0;i<shList.length;i++) {
+						var entry = shList[i];
+						var chNum = entry.split('.');
+						if(chNum[1].search('-') != -1) {
+							var shNum = chNum[1].split('-');
+							var j =0;
+							for(j=shNum[0];j<=shNum[1];j++) {
+								var chSh = "#shloka_" + chNum[0] + "_"  + j;
+								finalList.push(chSh)
+							}
+						}else {
+							var chSh = "#shloka_" + chNum[0] + "_"  + chNum[1];
+							finalList.push(chSh)
+						}
+						
+					}
 				}
 			}else {
 				log.error("Validation of input for export failed");
