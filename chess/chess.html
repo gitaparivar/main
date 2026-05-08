@@ -62,14 +62,23 @@
     letter-spacing: 0.02em;
   }
   header .logo span { color: var(--text); }
-  header .engine-status {
+  header .header-right {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  header .engine-status {
     font-size: 0.72rem;
     font-family: 'DM Mono', monospace;
     color: var(--muted);
     display: flex;
     align-items: center;
     gap: 6px;
+  }
+  header .top-nav {
+    display: flex;
+    align-items: center;
   }
   header .home-link {
     color: var(--accent);
@@ -601,10 +610,14 @@
 
 <header>
   <div class="logo">♟ Chess<span>Learn</span></div>
-  <div class="engine-status">
-    <div class="dot" id="engine-dot"></div>
-    <a class="home-link" href="../index.html">Home</a>
-    <span id="engine-label">Loading engine…</span>
+  <div class="header-right">
+    <div class="engine-status">
+      <div class="dot" id="engine-dot"></div>
+      <span id="engine-label">Chess AI Engine</span>
+    </div>
+    <nav class="top-nav" aria-label="Primary">
+      <a class="home-link" href="../index.html">Home</a>
+    </nav>
   </div>
 </header>
 
@@ -832,19 +845,12 @@ function handleEngineMessage(e) {
 
 function setEngineStatus(state) {
   const dot = document.getElementById('engine-dot');
-  const label = document.getElementById('engine-label');
   dot.className = 'dot';
-  if (state === 'loading') {
-    label.textContent = 'Loading engine…';
-  } else if (state === 'ready') {
+  if (state === 'ready') {
     dot.classList.add('ready');
-    label.textContent = 'Stockfish 18 — Ready';
     updateStatus('Your turn — make a move');
   } else if (state === 'thinking') {
     dot.classList.add('thinking');
-    label.textContent = 'Stockfish 18 — Thinking…';
-  } else if (state === 'error') {
-    label.textContent = 'Engine error';
   }
 }
 
