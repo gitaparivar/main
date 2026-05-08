@@ -71,6 +71,13 @@
     align-items: center;
     gap: 6px;
   }
+  header .home-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+  }
+  header .home-link:hover { text-decoration: underline; }
   .dot {
     width: 7px; height: 7px;
     border-radius: 50%;
@@ -594,9 +601,9 @@
 
 <header>
   <div class="logo">♟ Chess<span>Learn</span></div>
- <div><a href="../index.html">Home</a></div>
   <div class="engine-status">
     <div class="dot" id="engine-dot"></div>
+    <a class="home-link" href="../index.html">Home</a>
     <span id="engine-label">Loading engine…</span>
   </div>
 </header>
